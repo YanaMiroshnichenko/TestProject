@@ -21,6 +21,7 @@
 	$result = mysqli_query($link, $query);
 	require_once('./head.php');
 	// my first commit
+	// my second comment
 ?>
 
 	
