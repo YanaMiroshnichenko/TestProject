@@ -20,6 +20,7 @@
 	$query = "SELECT * FROM comments INNER JOIN users ON comments.user_id=users.id ORDER BY comments.datetime DESC";
 	$result = mysqli_query($link, $query);
 	require_once('./head.php');
+	// my first commit
 ?>
 
 	
