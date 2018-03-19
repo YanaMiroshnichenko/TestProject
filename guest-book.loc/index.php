@@ -36,26 +36,40 @@
 	
 		<h2>Авторизация</h2>
 
-		<form class="form" method="post">
-			<p>
-		    	<input placeholder="Email" type="text" name="email" value="<?php echo $email; ?>">
-		    	<?php 
+		<form class="form form-horizontal form-group " method="post">
+			<?php 
+				$has_error_class = isset($arrayName['email']) && !empty($arrayName['email']) ? 'has-error' : '';
+				$has_success_class = isset($arrayName['email']) && empty($arrayName['email']) ? 'has-success' : '';
+			?>
+		    <div class="form-element form-group <?php echo $has_error_class; echo $has_success_class;?>">
+			 	<div class="col-sm-12">
+		    		<input class="form-control" placeholder="Email" type="text" name="email" value="<?php echo $email; ?>">	
+		    	</div>
+			</div>
+			<?php 
 		    		if(isset($arrayName['email']) && !empty($arrayName['email']) ){
 						echo $arrayName['email'];
 					}
 	    		?>	
-		    </p>
-		    <p>
-		    	<input placeholder="Пароль" type="password" name="password" value="<?php echo $password; ?>">
-		    	<?php 
+		    <?php 
+				$has_error_class = isset($arrayName['password']) && !empty($arrayName['password']) ? 'has-error' : '';
+				$has_success_class = isset($arrayName['password']) && empty($arrayName['password']) ? 'has-success' : '';
+			?>
+		    <div class="form-element form-group <?php echo $has_error_class; echo $has_success_class;?>">
+			 	<div class="col-sm-12">
+		    		<input class="form-control" placeholder="Пароль" type="password" name="password" value="<?php echo $password; ?>">
+		    	</div>
+			</div>
+			<?php 
 		    		if(isset($arrayName['password']) && !empty($arrayName['password']) ){
 						echo $arrayName['password'];
 					}
 	    		?>
-		    </p>
-		    <p>
-		    	<button type="submit" name="submit" class="button-form">Вход</button>
-		    </p>
+		    <div class="form-group form-element">
+			 	<div class="col-sm-12">
+		    		<button type="submit" name="submit" class="form-control button-form">Вход</button>
+		    	</div>
+			</div>
 		</form>
 
 		<?php
