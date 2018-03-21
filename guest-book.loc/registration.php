@@ -7,6 +7,10 @@
 	$password = '';
 	$second_password = '';
 	$has_errors = FALSE;
+	$subject='Подтверждение регистрации';
+	$message='Для подтверждения регистрации перейдите по ссылке: http://testproject/guest-book.loc/index.php';
+	$reg='';
+
 	if (isset($_POST) && !empty($_POST)) {
 		$first_name = preg_replace("/\s{2,}/",' ',trim($_POST['first-name']));
 		$last_name = preg_replace("/\s{2,}/",' ',trim($_POST['last-name']));
@@ -35,7 +39,7 @@
 			$has_errors = TRUE;
 		}
 		if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-			$arrayErrors['wrong-email'] = 'Введите корректный e-mail адрес!'; 
+			$arrayErrors['email'] = 'Введите корректный e-mail адрес!'; 
 			$has_errors = TRUE;
 		}
 
@@ -49,47 +53,47 @@
 			$has_errors = TRUE;
 		}
 		if (!empty($second_password) && $password!=$second_password) {
-			$arrayErrors['wrong-password'] = 'Пароли не совпадают!';
+		
+			$arrayErrors['second-password'] = 'Пароли не совпадают!';
 			$has_errors = TRUE;
 		}
 		if (!empty($password) && strlen($password) < 5) {
-			$arrayErrors['min-password'] = 'Введите не менее 5-ти символов!';
+			$arrayErrors['password'] = 'Введите не менее 5-ти символов!';
 			$has_errors = TRUE;
 		}
 		if (strlen($password) > 10) {
-			$arrayErrors['max-password'] = 'Максимальное количество символов - 10!';
+			$arrayErrors['password'] = 'Максимальное количество символов - 10!';
 			$has_errors = TRUE;
 		}
-		$query = "SELECT `email` FROM users WHERE email=`$email`";
+		$query = "SELECT `email` FROM users WHERE email='$email'";
 		$result = mysqli_query($link, $query);
-
-		if (!empty($result) && !empty($email)) {
-			$arrayErrors['exists-email'] = 'Такой e-mail адрес уже зарегистрирован!';
+		$row = mysqli_fetch_assoc($result);
+		if (!empty($row['email'])) {
+			$arrayErrors['email'] = 'Такой e-mail адрес уже зарегистрирован!';
 			$has_errors = TRUE;
 		}
 		if ($password==$second_password && $has_errors==FALSE) {
 			$hash_password = md5($password);
-			$hash_email = md5($email);
-			$query = "INSERT INTO `users`(`first_name`, `last_name`, `email`, `password`) VALUES 
-		    							('$first_name', '$last_name', '$hash_email', '$hash_password')";
+			$reg=0;
+			$query = "INSERT INTO `users`(`first_name`, `last_name`, `email`, `password`, `activated`) VALUES 
+		    							('$first_name', '$last_name', '$email', '$hash_password', '$reg')";
+
+		  							
 			mysqli_query($link, $query);
 			mysqli_close($link);
-			
-			header("Location: index.php");
+			mail($email, $subject, $message);
+			echo 'Мы отправили вам письмо на почту. Подтвердите регистрацию!';
+			//header("Location: index.php");
 		}
 	}
 	require_once('./head.php');
 ?>
-
-
-	<div class="col-lg-offset-4 col-md-offset-4 col-sm-offset-3 col-xs-offset-1 col-lg-4 col-md-4 col-sm-6 col-xs-10 main-blok">
+<div class="col-lg-offset-4 col-md-offset-4 col-sm-offset-3 col-xs-offset-1 col-lg-4 col-md-4 col-sm-6 col-xs-10 main-blok">
 		<h2>Регистрация</h2>
 		<form class="form form-horizontal form-group " method="post" id="form">
 			<?php 
 				$has_error_class = isset($arrayErrors['first-name']) && !empty($arrayErrors['first-name']) ? 'has-error' : '';
 				$has_success_class = isset($arrayErrors['first-name']) && empty($arrayErrors['first-name']) ? 'has-success' : '';
-				
-
 			?>
 			<div class="form-element form-group <?php echo $has_error_class; echo $has_success_class;?>">
 			 	<div class="col-sm-12">
@@ -133,15 +137,6 @@
 		    	<?php 
 		    		if(isset($arrayErrors['email']) && !empty($arrayErrors['email']) ){
 						echo $arrayErrors['email'];
-						
-					}
-					if(isset($arrayErrors['wrong-email']) && !empty($arrayErrors['wrong-email']) ){
-						echo $arrayErrors['wrong-email'];
-						$has_errors = TRUE;
-					}
-					if(isset($arrayErrors['exists-email']) && !empty($arrayErrors['exists-email']) ){
-						echo $arrayErrors['exists-email'];
-						
 					}
 				?>
 	    	</span>
@@ -160,21 +155,13 @@
 						echo $arrayErrors['password'];
 						
 					}
-					if(isset($arrayErrors['min-password']) && !empty($arrayErrors['min-password']) ){
-						echo $arrayErrors['min-password'];
-						
-					}
-					if(isset($arrayErrors['max-password']) && !empty($arrayErrors['max-password']) ){
-						echo $arrayErrors['max-password'];
-						
-					}
 		    	?>
 		    </span>
 		    <?php 
 				$has_error_class = isset($arrayErrors['second-password']) && !empty($arrayErrors['second-password']) ? 'has-error' : '';
 				$has_success_class = isset($arrayErrors['second-password']) && empty($arrayErrors['second-password']) ? 'has-success' : '';
 			?>
-		    <div class="form-element form-group <?php echo $has_error_class; echo $has_success_class;?>">
+		    <div class="form-element form-group <?php echo $has_error_class; echo $has_success_class; ?>">
 			 	<div class="col-sm-12">
 		    		<input class="form-control" placeholder="Повторный пароль" type="password" name="second-password" value="<?php echo $second_password; ?>">
 		    	</div>
@@ -183,10 +170,6 @@
 		    	<?php 
 			    	if(isset($arrayErrors['second-password']) && !empty($arrayErrors['second-password']) ) {
 						echo $arrayErrors['second-password'];
-						
-					}
-					if(isset($arrayErrors['wrong-password']) && !empty($arrayErrors['wrong-password']) ) {
-						echo $arrayErrors['wrong-password'];
 						
 					}
 				?>
