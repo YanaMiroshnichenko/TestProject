@@ -6,11 +6,14 @@
 	$email = '';
 	$password = '';
 	$second_password = '';
+	$date = date('Y-m-d H:i:s');
+	$hash_date = md5($date);
 	$has_errors = FALSE;
 	$subject='Подтверждение регистрации';
-	$message='Для подтверждения регистрации перейдите по ссылке: http://testproject/guest-book.loc/index.php';
+	$message='Для подтверждения регистрации перейдите по ссылке: http://testproject/guest-book.loc/confirm.php?hash='.$hash_date;
 	$reg='';
-
+	$message_from_reg='';
+	
 	if (isset($_POST) && !empty($_POST)) {
 		$first_name = preg_replace("/\s{2,}/",' ',trim($_POST['first-name']));
 		$last_name = preg_replace("/\s{2,}/",' ',trim($_POST['last-name']));
@@ -75,14 +78,12 @@
 		if ($password==$second_password && $has_errors==FALSE) {
 			$hash_password = md5($password);
 			$reg=0;
-			$query = "INSERT INTO `users`(`first_name`, `last_name`, `email`, `password`, `activated`) VALUES 
-		    							('$first_name', '$last_name', '$email', '$hash_password', '$reg')";
-
-		  							
-			mysqli_query($link, $query);
+			$query = "INSERT INTO `users`(`first_name`, `last_name`, `email`, `password`, `activated`, `confirmation_hash`) VALUES 
+		    							('$first_name', '$last_name', '$email', '$hash_password', '$reg', '$hash_date')";
+		    mysqli_query($link, $query);
 			mysqli_close($link);
 			mail($email, $subject, $message);
-			echo 'Мы отправили вам письмо на почту. Подтвердите регистрацию!';
+			$message_from_reg = 'Мы отправили вам письмо. Подтвердите регистрацию!';
 			//header("Location: index.php");
 		}
 	}
@@ -104,7 +105,6 @@
 				<?php 
 			    	if(isset($arrayErrors['first-name']) && !empty($arrayErrors['first-name'])) {
 						echo $arrayErrors['first-name'];
-						
 					}
 		    	?>
 	    	</span>
@@ -153,7 +153,6 @@
 		    	<?php 
 			    	if(isset($arrayErrors['password']) && !empty($arrayErrors['password']) ){
 						echo $arrayErrors['password'];
-						
 					}
 		    	?>
 		    </span>
@@ -169,8 +168,7 @@
 			<span class="result_of_query">
 		    	<?php 
 			    	if(isset($arrayErrors['second-password']) && !empty($arrayErrors['second-password']) ) {
-						echo $arrayErrors['second-password'];
-						
+						echo $arrayErrors['second-password'];	
 					}
 				?>
 			</span>
@@ -180,6 +178,9 @@
 		    	</div>
 			</div>
 		</form>
+		<h4 class="good_result">
+			<?php echo $message_from_reg; ?>
+		</h4>
 		<h4><a href="index.php">Назад</a></h4>
 	</div>
 </body>
