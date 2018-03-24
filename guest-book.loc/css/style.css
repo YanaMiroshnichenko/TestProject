@@ -81,3 +81,7 @@ h2, h4 {
 .good_result {
 	color: #009426;
 }
+
+.display-none {
+	display: none!important;
+}

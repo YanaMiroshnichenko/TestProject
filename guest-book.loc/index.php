@@ -57,7 +57,7 @@
 			?>
 		    <div class="form-element form-group <?php echo $has_error_class; echo $has_success_class; echo $wrong_data; ?>">
 			 	<div class="col-sm-12">
-		    		<input class="form-control" placeholder="Email" type="text" name="email" value="<?php echo $email; ?>">	
+		    		<input class="form-control" placeholder="Email" type="text" name="email">	
 		    	</div>
 			</div>
 			<span class="result_of_query">
@@ -74,7 +74,7 @@
 			?>
 		    <div class="form-element form-group <?php echo $has_error_class; echo $has_success_class; echo $wrong_data; ?>">
 			 	<div class="col-sm-12">
-		    		<input class="form-control" placeholder="Пароль" type="password" name="password" value="<?php echo $password; ?>">
+		    		<input class="form-control" placeholder="Пароль" type="password" name="password">
 		    	</div>
 			</div>
 			<span class="result_of_query">

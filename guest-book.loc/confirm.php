@@ -1,22 +1,29 @@
 <?php
 	require_once('./bd.php');
 	$hash_link=$_GET['hash'];
-
 	$query = "SELECT * FROM users WHERE `confirmation_hash`='$hash_link'";
-	$result = mysqli_query($link, $query); 
-	$row = mysqli_fetch_assoc($result);
 
-	if ($row['activated']==0) {
+	$result = mysqli_query($link, $query); 
+
+	$row = mysqli_fetch_assoc($result);
+	if (!empty($row['id'])) {
+		if ($row['activated']==0) {
 		$reg=1;
 		$query = "UPDATE `users` SET `activated`='$reg' WHERE `confirmation_hash`='$hash_link'";
+		
 		$result = mysqli_query($link, $query); 
+		
 		mysqli_close($link);
 		$message_1='Регистрация прошла успешно!';
 		$message_2='';
+		}
+		else {
+			$message_2='Вы уже зарегистировались!!!';
+			$message_1='';
+		}	
 	}
 	else {
-		$message_2='Вы уже зарегистировались!!!';
-		$message_1='';
+		header("Location: error.php");
 	}
 	session_start();
 	$_SESSION['user_id'] = $row['id'];
