@@ -1,0 +1,119 @@
+@extends('layout')
+@section('content')
+    <div class="flex-center position-ref full-height">
+        <div class="container">
+            <div class="row"> 
+                <div class="col-md-12">
+                    
+                    <h1>{{ $pagetitle }}</h1>
+                    <h3><a href="/settings">Настройки</a></h3>
+                    <h3><a href="/">Выход</a></h3>
+                    <h2>{{ $name }} ищет:</h2>
+                    <div>
+                            <form method="POST" action="/products">
+                               {{ csrf_field() }}
+                                 <div class="form-group col-md-3">
+                                    <label for="email">Цена от:</label>
+                                    <select class="form-control" placeholder="E-mail" name="price_from" type="email">
+                                        @for ($i = 1; $i <= 1000000; $i = $i*10) 
+                                            <option 
+                                                @if ($i == $priceFrom ) 
+                                                    {{'selected'}}  
+                                                @endif 
+                                            >{{ $i }}</option>
+                                        @endfor  
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="email">Цена до:</label>
+                                    <select class="form-control" placeholder="E-mail" name="price_to" type="email">
+                                        @for ($i = 1; $i <= 1000000; $i = $i*10) 
+                                            <option 
+                                                @if ($i == $priceTo ) 
+                                                    {{'selected'}}  
+                                                @endif
+                                            >{{ $i }}</option>
+                                        @endfor 
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="email">Количество комнат от:</label>
+                                    <select class="form-control" placeholder="E-mail" name="number_of_rooms_from" type="email">
+                                        @for ($i = 1; $i <= 10; $i++) 
+                                            <option
+                                                @if ($i == $numberOfRoomsFrom ) 
+                                                    {{'selected'}}  
+                                                @endif
+                                            >{{ $i }}</option>
+                                        @endfor 
+                                    </select>
+                                </div>
+                                  <div class="form-group col-md-3">
+                                    <label for="email">Количество комнат до:</label>
+                                    <select class="form-control" placeholder="E-mail" name="number_of_rooms_to" type="email">
+                                        @for ($i = 1; $i <= 10; $i++) 
+                                            <option
+                                                @if ($i == $numberOfRoomsTo )
+                                                    {{'selected'}}
+                                                @endif
+                                            >{{ $i }}</option>
+                                        @endfor 
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="email">Этаж от:</label>
+                                    <select class="form-control" placeholder="E-mail" name="floor_from" type="email">
+                                        @for ($i = 1; $i <= 15; $i++) 
+                                            <option
+                                                @if ($i == $floorFrom )
+                                                    {{'selected'}}
+                                                @endif
+                                            >{{ $i }}</option>
+                                        @endfor 
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="email">Этаж до:</label>
+                                    <select class="form-control" placeholder="E-mail" name="floor_to" type="email">
+                                        @for ($i = 1; $i <= 15; $i++) 
+                                            <option
+                                                @if ($i == $floorTo )
+                                                    {{'selected'}}
+                                                @endif
+                                            >{{ $i }}</option>
+                                        @endfor 
+                                    </select>
+                                </div>
+                          
+                                <div class="form-group col-md-3">
+                                    <input class="btn btn-primary" type="submit" value="Фильтровать">
+                                </div>
+                               
+                                
+                            </form>
+                        </div>
+                    @foreach ($flats as $flat)
+                        <div style="float:left; width: 100%; margin-bottom: 20px;">
+                            <div style="float:left;">
+                                <img style="width: 200px;" src="{{ $flat->image_url }}">
+                            </div>
+                            <div style="float:left;">
+                                <span>
+                                <b>Цена: </b>{{ $flat->price }} грн
+                                </span>
+                                <br>
+                                <span>
+                                    <b>Краткое описание: </b>{{ $flat->short_description }}
+                                </span>
+                                <br>
+                                <span>
+                                    <a href="{{ $flat->id }}/description">Полное описание</a>
+                                </span>
+                            </div>
+                        </div>
+                    @endforeach
+                </div> 
+            </div>  
+        </div>
+    </div>
+@stop
